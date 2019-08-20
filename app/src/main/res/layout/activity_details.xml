@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.details.DetailsActivity">
+
+    <com.jgabrielfreitas.core.BlurImageView
+        android:id="@+id/details_blur_img"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"/>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="100dp">
+
+
+            <ImageView
+                android:id="@+id/details_character_poster"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="300dp"
+                android:alpha="1"
+                android:scaleType="centerCrop" />
+
+            <Button
+                android:id="@+id/details_back_btn"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_alignParentStart="true"
+                android:layout_marginTop="24dp"
+                android:background="@drawable/ic_back" />
+
+            <TextView
+                android:id="@+id/details_name_tv"
+                style="@style/DetailsTextHeadingStyle"
+                android:layout_below="@id/details_character_poster"
+                android:text="@string/name"
+                android:textAllCaps="true" />
+
+            <TextView
+                android:id="@+id/details_char_name_tv"
+                style="@style/DetailsTextSubHeadingStyle"
+                android:layout_below="@id/details_name_tv"
+                tools:text="A.I.M." />
+
+            <TextView
+                android:id="@+id/details_description_tv"
+                style="@style/DetailsTextHeadingStyle"
+                android:layout_below="@id/details_char_name_tv"
+                android:layout_marginTop="4dp"
+                android:text="@string/description"
+                android:textAllCaps="true" />
+
+            <TextView
+                android:id="@+id/details_char_description_tv"
+                style="@style/DetailsTextSubHeadingStyle"
+                android:layout_below="@id/details_description_tv"
+                android:text="@string/not_available" />
+
+            <TextView
+                android:id="@+id/details_comics_tv"
+                style="@style/DetailsTextHeadingStyle"
+                android:layout_below="@id/details_char_description_tv"
+                android:layout_marginTop="24dp"
+                android:text="@string/comics"
+                android:textAllCaps="true" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/details_comics_recycler"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/details_comics_tv"
+                android:orientation="horizontal"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                tools:listitem="@layout/item_details_recycler" />
+
+            <TextView
+                android:id="@+id/details_series_tv"
+                style="@style/DetailsTextHeadingStyle"
+                android:layout_below="@id/details_comics_recycler"
+                android:layout_marginTop="24dp"
+                android:text="@string/series"
+                android:textAllCaps="true" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/details_series_recycler"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/details_series_tv"
+                android:orientation="horizontal"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                tools:listitem="@layout/item_details_recycler" />
+
+            <TextView
+                android:id="@+id/details_stories_tv"
+                style="@style/DetailsTextHeadingStyle"
+                android:layout_below="@id/details_series_recycler"
+                android:layout_marginTop="24dp"
+                android:text="@string/stories"
+                android:textAllCaps="true" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/details_stories_recycler"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/details_stories_tv"
+                android:orientation="horizontal"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                tools:listitem="@layout/item_details_recycler" />
+
+            <TextView
+                android:id="@+id/details_events_tv"
+                style="@style/DetailsTextHeadingStyle"
+                android:layout_below="@id/details_stories_recycler"
+                android:layout_marginTop="24dp"
+                android:text="@string/events"
+                android:textAllCaps="true" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/details_events_recycler"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/details_events_tv"
+                android:orientation="horizontal"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                tools:listitem="@layout/item_details_recycler" />
+
+            <TextView
+                android:id="@+id/details_links_tv"
+                style="@style/DetailsTextHeadingStyle"
+                android:layout_below="@id/details_events_recycler"
+                android:layout_marginTop="24dp"
+                android:text="@string/related_links"
+                android:textAllCaps="true" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/details_links_recycler"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/details_links_tv"
+                android:orientation="vertical"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                tools:listitem="@layout/item_links" />
+        </RelativeLayout>
+    </ScrollView>
+</RelativeLayout>

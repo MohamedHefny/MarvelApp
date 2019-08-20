@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">MarvelTask</string>
+    <string name="search">Search</string>
+    <string name="search_hint">Search…</string>
+
+
+    <string name="api_key_name">apikey</string>
+    <string name="api_key_value">e205260015f16eda30bd55b6a58e52c7</string>
+    <string name="name">Name</string>
+    <string name="description">Description</string>
+    <string name="comics">Comics</string>
+    <string name="series">Series</string>
+    <string name="stories">Stories</string>
+    <string name="events">Events</string>
+    <string name="related_links">Related Links</string>
+    <string name="not_available">Not available</string>
+    <string name="cancel">Cancel</string>
+</resources>
