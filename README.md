@@ -1,5 +1,5 @@
 # MarvelApp
-This is a simple app to show marvel characters and browse their details. The app build using of MVVM architecture pattern and architecture components.
+This is a simple app to show marvel characters and browse their details. The app is build using of MVVM architecture pattern and architecture components.
 
 ## MVVM Architecture Pattern
 
