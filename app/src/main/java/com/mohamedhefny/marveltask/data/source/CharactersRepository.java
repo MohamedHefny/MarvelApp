@@ -1,19 +1,15 @@
 package com.mohamedhefny.marveltask.data.source;
 
-import android.content.Context;
-
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.mohamedhefny.marveltask.data.entities.Character;
 import com.mohamedhefny.marveltask.data.source.loacal.MarvelDatabase;
 import com.mohamedhefny.marveltask.data.source.remote.ApiServices;
-import com.mohamedhefny.marveltask.data.source.remote.RetrofitConn;
 import com.mohamedhefny.marveltask.data.source.remote.responseMapping.characters.CharacterResponse;
 import com.mohamedhefny.marveltask.util.AppConstants;
 import com.mohamedhefny.marveltask.util.HashGenerator;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -38,16 +34,16 @@ public class CharactersRepository {
     private static final byte mLoadingLimitNumber = 12;
     private long mMaxPageNumber;
 
-    private CharactersRepository(Context context) {
-        mApiServices = RetrofitConn.initRetrofit();
-        mLocalSource = MarvelDatabase.getInstance(context);
+    private CharactersRepository(MarvelDatabase localSource, ApiServices remoteSource) {
+        mLocalSource = localSource;
+        mApiServices = remoteSource;
         mCharactersList = mLocalSource.characterDao().getCharacters();
         mIsLoading = new MutableLiveData<>();
     }
 
-    public static CharactersRepository getInstance(Context context) {
+    public static CharactersRepository getInstance(MarvelDatabase localSource, ApiServices remoteSource) {
         if (mCharsRepository == null)
-            mCharsRepository = new CharactersRepository(context);
+            mCharsRepository = new CharactersRepository(localSource, remoteSource);
 
         return mCharsRepository;
     }

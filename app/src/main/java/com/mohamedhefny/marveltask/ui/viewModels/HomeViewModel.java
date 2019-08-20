@@ -8,6 +8,7 @@ import androidx.lifecycle.LiveData;
 
 import com.mohamedhefny.marveltask.data.entities.Character;
 import com.mohamedhefny.marveltask.data.source.CharactersRepository;
+import com.mohamedhefny.marveltask.util.AppDependencies;
 
 import java.util.List;
 
@@ -18,7 +19,7 @@ public class HomeViewModel extends AndroidViewModel {
 
     public HomeViewModel(@NonNull Application application) {
         super(application);
-        mCharsRepository = CharactersRepository.getInstance(application);
+        mCharsRepository = AppDependencies.provideCharsRepo(application);
     }
 
     /**

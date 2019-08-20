@@ -18,6 +18,7 @@ import com.mohamedhefny.marveltask.ui.BaseActivity;
 import com.mohamedhefny.marveltask.ui.details.adapters.DetailsAdapter;
 import com.mohamedhefny.marveltask.ui.viewModels.DetailsViewModel;
 import com.mohamedhefny.marveltask.util.AppConstants;
+import com.mohamedhefny.marveltask.util.AppDependencies;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
@@ -56,7 +57,10 @@ public class DetailsActivity extends BaseActivity {
         setContentView(R.layout.activity_details);
 
         mDetailsViewModel = obtainViewModel(this);
-        mDetailsViewModel.init(getCharacterPosition(), getSearchFlag());
+
+        mDetailsViewModel.init(AppDependencies.provideCharsRepo(this),
+                getCharacterPosition(), getSearchFlag());
+
         mDetailsViewModel.loadDetails();
 
         Character mCharacter = mDetailsViewModel.getCharacter();

@@ -11,19 +11,18 @@ import com.mohamedhefny.marveltask.data.source.CharacterDetailsRepository;
 import com.mohamedhefny.marveltask.data.source.CharactersRepository;
 import com.mohamedhefny.marveltask.data.source.remote.responseMapping.details.DetailsItem;
 import com.mohamedhefny.marveltask.util.AppConstants;
+import com.mohamedhefny.marveltask.util.AppDependencies;
 
 import java.util.List;
 
 public class DetailsViewModel extends AndroidViewModel {
 
-    private CharactersRepository mCharsRepository;
     private CharacterDetailsRepository mCharacterDetailsRepository;
 
     private Character mCharacter;
 
     public DetailsViewModel(@NonNull Application application) {
         super(application);
-        mCharsRepository = CharactersRepository.getInstance(application);
     }
 
     /**
@@ -33,14 +32,15 @@ public class DetailsViewModel extends AndroidViewModel {
      *                   value can be negative if you init() for the second time, it will just get the existing repo object.
      * @param searchFlag boolean to determine which list to select character from using position.
      */
-    public void init(int position, boolean searchFlag) {
+    public void init(CharactersRepository charactersRepo, int position, boolean searchFlag) {
+
         if (position < 0) {
-            mCharacterDetailsRepository = CharacterDetailsRepository.getInstance(null);
+            mCharacterDetailsRepository = AppDependencies.provideCharsDetailsRepo();
             return;
         }
 
-        mCharacter = mCharsRepository.getCharacterFromList(position, searchFlag);
-        mCharacterDetailsRepository = CharacterDetailsRepository.getInstance(mCharacter);
+        mCharacter = charactersRepo.getCharacterFromList(position, searchFlag);
+        mCharacterDetailsRepository = AppDependencies.provideCharsDetailsRepo(mCharacter);
         checkPersistenceData();
     }
 

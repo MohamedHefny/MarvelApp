@@ -5,7 +5,6 @@ import androidx.viewpager.widget.ViewPager;
 
 import android.os.Bundle;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.mohamedhefny.marveltask.R;
@@ -14,11 +13,11 @@ import com.mohamedhefny.marveltask.ui.BaseActivity;
 import com.mohamedhefny.marveltask.ui.detailsPager.adapters.DetailsPagerAdapter;
 import com.mohamedhefny.marveltask.ui.viewModels.DetailsViewModel;
 import com.mohamedhefny.marveltask.util.AppConstants;
+import com.mohamedhefny.marveltask.util.AppDependencies;
 
 import java.util.List;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class DetailsPagerActivity extends BaseActivity implements ViewPager.OnPageChangeListener {
@@ -28,6 +27,7 @@ public class DetailsPagerActivity extends BaseActivity implements ViewPager.OnPa
     @BindView(R.id.details_pager_pages_count_tv)
     TextView mPageCount;
 
+    //Initialize pages assuming at least 1 page if this activity opened
     private int mCurrentPage = 1;
     private int mTotalPages = 1;
 
@@ -42,7 +42,8 @@ public class DetailsPagerActivity extends BaseActivity implements ViewPager.OnPa
         String mListType = getListType();
 
         DetailsViewModel detailsViewModel = ViewModelProviders.of(this).get(DetailsViewModel.class);
-        detailsViewModel.init(-1, false);
+
+        detailsViewModel.init(AppDependencies.provideCharsRepo(this), -1, false);
 
         List<DetailsItem> detailsItems = detailsViewModel.getPagerList(mListType).getValue();
 
