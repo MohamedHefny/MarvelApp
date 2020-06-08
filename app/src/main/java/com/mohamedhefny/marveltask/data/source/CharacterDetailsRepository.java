@@ -1,5 +1,6 @@
 package com.mohamedhefny.marveltask.data.source;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
 
 import com.mohamedhefny.marveltask.data.entities.Character;
@@ -34,41 +35,40 @@ public class CharacterDetailsRepository {
     private MutableLiveData<List<DetailsItem>> mStoriesList;
     private MutableLiveData<List<DetailsItem>> mEventsList;
 
-    private CharacterDetailsRepository(Character character) {
+    private CharacterDetailsRepository() {
         mApiServices = RetrofitConn.initRetrofit();
-        mCharacter = character;
         mComicsList = new MutableLiveData<>();
         mSeriesList = new MutableLiveData<>();
         mStoriesList = new MutableLiveData<>();
         mEventsList = new MutableLiveData<>();
     }
 
-    public static CharacterDetailsRepository getInstance(Character character) {
+    public static CharacterDetailsRepository getInstance() {
         if (mCharDetailsRepository == null)
-            mCharDetailsRepository = new CharacterDetailsRepository(character);
+            mCharDetailsRepository = new CharacterDetailsRepository();
 
         return mCharDetailsRepository;
     }
 
     //TODO Schedule net work calling to improve performance.
-    public void loadCharacterDetails(String detailPath, long characterId) {
+    public void loadCharacterDetails(String detailPath) {
 
         long timestamp = System.currentTimeMillis() / 1000;
 
         //Generate hash using private key and timestamp to use it for request data from API.
         String hash = HashGenerator.generate(timestamp, AppConstants.API_PRIVATE_KEY, AppConstants.API_PUBLIC_KEY);
 
-        mApiServices.getCharacterDetails(detailPath, characterId, AppConstants.API_PUBLIC_KEY, hash, timestamp)
+        mApiServices.getCharacterDetails(detailPath, mCharacter.getCharId(), AppConstants.API_PUBLIC_KEY, hash, timestamp)
                 .enqueue(new Callback<DetailsResponse>() {
                     @Override
-                    public void onResponse(Call<DetailsResponse> call, Response<DetailsResponse> response) {
+                    public void onResponse(@NonNull Call<DetailsResponse> call, @NonNull Response<DetailsResponse> response) {
                         if (response.body() != null) {
                             getListType(detailPath).setValue(response.body().getDetailsData().getDetailsItemList());
                         }
                     }
 
                     @Override
-                    public void onFailure(Call<DetailsResponse> call, Throwable t) {
+                    public void onFailure(@NonNull Call<DetailsResponse> call, @NonNull Throwable t) {
                         //Handel error
                     }
                 });
@@ -93,6 +93,11 @@ public class CharacterDetailsRepository {
         mSeriesList.setValue(new ArrayList<>());
         mStoriesList.setValue(new ArrayList<>());
         mEventsList.setValue(new ArrayList<>());
+    }
+
+    public void setCharacter(Character character) {
+        mCharacter = character;
+        clearPersistence();
     }
 
     public Character getCharacter() {

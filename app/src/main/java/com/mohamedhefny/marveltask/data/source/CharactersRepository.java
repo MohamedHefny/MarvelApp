@@ -1,5 +1,6 @@
 package com.mohamedhefny.marveltask.data.source;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
@@ -23,13 +24,16 @@ import retrofit2.Response;
  */
 public class CharactersRepository {
 
-    private static CharactersRepository mCharsRepository;
+    private static CharactersRepository mINSTANCE;
+
     private ApiServices mApiServices;
     private MarvelDatabase mLocalSource;
 
+    private MutableLiveData<Boolean> mLoadingIndicator;
     private LiveData<List<Character>> mCharactersList;
     private MutableLiveData<List<Character>> mSearchList;
-    private MutableLiveData<Boolean> mIsLoading;
+
+    private Character mLastSelectedCharacter;
 
     private static final byte mLoadingLimitNumber = 12;
     private long mMaxPageNumber;
@@ -37,15 +41,15 @@ public class CharactersRepository {
     private CharactersRepository(MarvelDatabase localSource, ApiServices remoteSource) {
         mLocalSource = localSource;
         mApiServices = remoteSource;
+        mLoadingIndicator = new MutableLiveData<>();
         mCharactersList = mLocalSource.characterDao().getCharacters();
-        mIsLoading = new MutableLiveData<>();
     }
 
     public static CharactersRepository getInstance(MarvelDatabase localSource, ApiServices remoteSource) {
-        if (mCharsRepository == null)
-            mCharsRepository = new CharactersRepository(localSource, remoteSource);
+        if (mINSTANCE == null)
+            mINSTANCE = new CharactersRepository(localSource, remoteSource);
 
-        return mCharsRepository;
+        return mINSTANCE;
     }
 
     public LiveData<List<Character>> getCharacters(long offset) {
@@ -54,25 +58,24 @@ public class CharactersRepository {
         if (offset >= mMaxPageNumber && offset > 0)
             return mCharactersList;
 
+        mLoadingIndicator.setValue(true);
 
         long timestamp = System.currentTimeMillis() / 1000;
 
-        //Generate hash using private key and timestamp to use it for request data from API.
-        String hash = HashGenerator.generate(timestamp, AppConstants.API_PRIVATE_KEY, AppConstants.API_PUBLIC_KEY);
-
-        mIsLoading.setValue(true);
-        mApiServices.getCharacters(AppConstants.API_PUBLIC_KEY, hash, timestamp, mLoadingLimitNumber, offset, null)
+        mApiServices.getCharacters(AppConstants.API_PUBLIC_KEY, getHash(timestamp), timestamp, mLoadingLimitNumber, offset, null)
                 .enqueue(new Callback<CharacterResponse>() {
                     @Override
-                    public void onResponse(Call<CharacterResponse> call, Response<CharacterResponse> response) {
-                        mLocalSource.characterDao().insertAll(response.body().getCharactersData().getCharacters());
-                        mMaxPageNumber = response.body().getCharactersData().getTotal();
-                        mIsLoading.setValue(false);
+                    public void onResponse(@NonNull Call<CharacterResponse> call, @NonNull Response<CharacterResponse> response) {
+                        if (response.isSuccessful() && response.body() != null) {
+                            mMaxPageNumber = response.body().getCharactersData().getTotal();
+                            mLocalSource.characterDao().insertAll(response.body().getCharactersData().getCharacters());
+                        }
+                        mLoadingIndicator.setValue(false);
                     }
 
                     @Override
-                    public void onFailure(Call<CharacterResponse> call, Throwable t) {
-                        mIsLoading.setValue(false);
+                    public void onFailure(@NonNull Call<CharacterResponse> call, @NonNull Throwable t) {
+                        mLoadingIndicator.setValue(false);
                         //Handel error
                     }
                 });
@@ -81,25 +84,30 @@ public class CharactersRepository {
     }
 
     public void searchByName(String name) {
+        mLoadingIndicator.setValue(true);
 
         long timestamp = System.currentTimeMillis() / 1000;
 
-        //Generate hash using private key and timestamp to use it for request data from API.
-        String hash = HashGenerator.generate(timestamp, AppConstants.API_PRIVATE_KEY, AppConstants.API_PUBLIC_KEY);
-
-        mIsLoading.setValue(true);
-        mApiServices.getCharacters(AppConstants.API_PUBLIC_KEY, hash, timestamp, (byte) 25, 0, name)
+        mApiServices.getCharacters(AppConstants.API_PUBLIC_KEY, getHash(timestamp), timestamp, (byte) 25, 0, name)
                 .enqueue(new Callback<CharacterResponse>() {
                     @Override
-                    public void onResponse(Call<CharacterResponse> call, Response<CharacterResponse> response) {
-                        mSearchList.setValue(response.body().getCharactersData().getCharacters());
+                    public void onResponse(@NonNull Call<CharacterResponse> call, @NonNull Response<CharacterResponse> response) {
+                        if (response.isSuccessful() && response.body() != null)
+                            mSearchList.setValue(response.body().getCharactersData().getCharacters());
                     }
 
                     @Override
-                    public void onFailure(Call<CharacterResponse> call, Throwable t) {
+                    public void onFailure(@NonNull Call<CharacterResponse> call, @NonNull Throwable t) {
                         //Handel error
                     }
                 });
+    }
+
+    /**
+     * Get hash using private key and timestamp to use it for request data from API.
+     */
+    private String getHash(long timestamp) {
+        return HashGenerator.generate(timestamp, AppConstants.API_PRIVATE_KEY, AppConstants.API_PUBLIC_KEY);
     }
 
     public LiveData<List<Character>> getSearchList() {
@@ -108,15 +116,15 @@ public class CharactersRepository {
         return mSearchList;
     }
 
-    public Character getCharacterFromList(int position, boolean searchFlag) {
-        if (searchFlag)
-            return mSearchList.getValue().get(position);
-        else
-            return mCharactersList.getValue().get(position);
+    public void setLastSelectedCharacter(Character mLastSelectedCharacter) {
+        this.mLastSelectedCharacter = mLastSelectedCharacter;
+    }
+
+    public Character getLastSelectedCharacter() {
+        return mLastSelectedCharacter;
     }
 
     public LiveData<Boolean> isLoading() {
-        return mIsLoading;
+        return mLoadingIndicator;
     }
-
 }

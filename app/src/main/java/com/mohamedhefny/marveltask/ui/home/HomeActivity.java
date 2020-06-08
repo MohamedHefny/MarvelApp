@@ -1,7 +1,6 @@
 package com.mohamedhefny.marveltask.ui.home;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.RecyclerView;
@@ -15,6 +14,7 @@ import android.widget.SearchView;
 import android.widget.TextView;
 
 import com.mohamedhefny.marveltask.R;
+import com.mohamedhefny.marveltask.data.entities.Character;
 import com.mohamedhefny.marveltask.ui.BaseActivity;
 import com.mohamedhefny.marveltask.ui.details.DetailsActivity;
 import com.mohamedhefny.marveltask.ui.home.adapters.HomeAdapter;
@@ -27,7 +27,7 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.OnClick;
 
-public class HomeActivity extends BaseActivity implements ClickClaback, SearchView.OnQueryTextListener {
+public class HomeActivity extends BaseActivity implements ClickCallback, SearchView.OnQueryTextListener {
 
     //TODO Use searchable activity to filter result
     @BindView(R.id.toolbar_logo)
@@ -139,14 +139,9 @@ public class HomeActivity extends BaseActivity implements ClickClaback, SearchVi
     }
 
     @Override
-    public void onCharacterClicked(int position, boolean fromSearch) {
-        Intent charIntent = new Intent(HomeActivity.this, DetailsActivity.class);
-
-        //Send position of the character as an extra to retrieve this object from the persistence list in next activity.
-        charIntent.putExtra(AppConstants.CHARACTER_POSITION, position);
-        charIntent.putExtra(AppConstants.SEARCH_FLAG, fromSearch);
-
-        startActivity(charIntent);
+    public void onCharacterSelected(Character character) {
+        mHomeViewModel.setSelectedCharacter(character);
+        startActivity(new Intent(HomeActivity.this, DetailsActivity.class));
         overridePendingTransition(R.anim.activity_details_enter, R.anim.activity_home_exit);
     }
 

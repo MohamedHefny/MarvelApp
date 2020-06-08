@@ -1,11 +1,11 @@
 package com.mohamedhefny.marveltask.ui.detailsPager;
 
-import androidx.lifecycle.ViewModelProviders;
-import androidx.viewpager.widget.ViewPager;
-
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
+
+import androidx.lifecycle.ViewModelProviders;
+import androidx.viewpager.widget.ViewPager;
 
 import com.mohamedhefny.marveltask.R;
 import com.mohamedhefny.marveltask.data.source.remote.responseMapping.details.DetailsItem;
@@ -13,7 +13,6 @@ import com.mohamedhefny.marveltask.ui.BaseActivity;
 import com.mohamedhefny.marveltask.ui.detailsPager.adapters.DetailsPagerAdapter;
 import com.mohamedhefny.marveltask.ui.viewModels.DetailsViewModel;
 import com.mohamedhefny.marveltask.util.AppConstants;
-import com.mohamedhefny.marveltask.util.AppDependencies;
 
 import java.util.List;
 
@@ -42,8 +41,6 @@ public class DetailsPagerActivity extends BaseActivity implements ViewPager.OnPa
         String mListType = getListType();
 
         DetailsViewModel detailsViewModel = ViewModelProviders.of(this).get(DetailsViewModel.class);
-
-        detailsViewModel.init(AppDependencies.provideCharsRepo(this), -1, false);
 
         List<DetailsItem> detailsItems = detailsViewModel.getPagerList(mListType).getValue();
 

@@ -23,11 +23,7 @@ public class AppDependencies {
     }
 
     public static CharacterDetailsRepository provideCharsDetailsRepo() {
-        return CharacterDetailsRepository.getInstance(null);
-    }
-
-    public static CharacterDetailsRepository provideCharsDetailsRepo(Character character) {
-        return CharacterDetailsRepository.getInstance(character);
+        return CharacterDetailsRepository.getInstance();
     }
 
     private static ApiServices provideApiServices() {

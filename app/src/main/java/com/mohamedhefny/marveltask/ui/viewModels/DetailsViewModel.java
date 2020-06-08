@@ -17,41 +17,26 @@ import java.util.List;
 
 public class DetailsViewModel extends AndroidViewModel {
 
-    private CharacterDetailsRepository mCharacterDetailsRepository;
-
-    private Character mCharacter;
+    private CharacterDetailsRepository mCharacterDetailsRepo;
 
     public DetailsViewModel(@NonNull Application application) {
         super(application);
+        mCharacterDetailsRepo = AppDependencies.provideCharsDetailsRepo();
     }
 
-    /**
-     * Initialize variables
-     *
-     * @param position   is the character position to select from current mCharsRepository list,
-     *                   value can be negative if you init() for the second time, it will just get the existing repo object.
-     * @param searchFlag boolean to determine which list to select character from using position.
-     */
-    public void init(CharactersRepository charactersRepo, int position, boolean searchFlag) {
-
-        if (position < 0) {
-            mCharacterDetailsRepository = AppDependencies.provideCharsDetailsRepo();
-            return;
-        }
-
-        mCharacter = charactersRepo.getCharacterFromList(position, searchFlag);
-        mCharacterDetailsRepository = AppDependencies.provideCharsDetailsRepo(mCharacter);
-        checkPersistenceData();
+    public void initSelectedCharacter(CharactersRepository charactersRepo) {
+        mCharacterDetailsRepo.setCharacter(charactersRepo.getLastSelectedCharacter());
     }
+
 
     /**
      * Load character details
      */
     public void loadDetails() {
-        mCharacterDetailsRepository.loadCharacterDetails(AppConstants.EndPoints.COMICS, mCharacter.getCharId());
-        mCharacterDetailsRepository.loadCharacterDetails(AppConstants.EndPoints.SERIES, mCharacter.getCharId());
-        mCharacterDetailsRepository.loadCharacterDetails(AppConstants.EndPoints.STORIES, mCharacter.getCharId());
-        mCharacterDetailsRepository.loadCharacterDetails(AppConstants.EndPoints.EVENTS, mCharacter.getCharId());
+        mCharacterDetailsRepo.loadCharacterDetails(AppConstants.EndPoints.COMICS);
+        mCharacterDetailsRepo.loadCharacterDetails(AppConstants.EndPoints.SERIES);
+        mCharacterDetailsRepo.loadCharacterDetails(AppConstants.EndPoints.STORIES);
+        mCharacterDetailsRepo.loadCharacterDetails(AppConstants.EndPoints.EVENTS);
     }
 
     /**
@@ -72,31 +57,23 @@ public class DetailsViewModel extends AndroidViewModel {
         return null;
     }
 
-    /**
-     * Check if the new character selected, then clear the old character data
-     */
-    private void checkPersistenceData() {
-        if (mCharacter.getCharId() != mCharacterDetailsRepository.getCharacter().getCharId())
-            mCharacterDetailsRepository.clearPersistence();
-    }
-
     public Character getCharacter() {
-        return mCharacter;
+        return mCharacterDetailsRepo.getCharacter();
     }
 
     public LiveData<List<DetailsItem>> getComicsList() {
-        return mCharacterDetailsRepository.getComicsList();
+        return mCharacterDetailsRepo.getComicsList();
     }
 
     public LiveData<List<DetailsItem>> getSeriesList() {
-        return mCharacterDetailsRepository.getSeriesList();
+        return mCharacterDetailsRepo.getSeriesList();
     }
 
     public LiveData<List<DetailsItem>> getStoriesList() {
-        return mCharacterDetailsRepository.getStoriesList();
+        return mCharacterDetailsRepo.getStoriesList();
     }
 
     public LiveData<List<DetailsItem>> getEventsList() {
-        return mCharacterDetailsRepository.getEventsList();
+        return mCharacterDetailsRepo.getEventsList();
     }
 }

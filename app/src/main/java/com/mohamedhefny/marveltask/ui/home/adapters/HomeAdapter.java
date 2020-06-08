@@ -1,7 +1,5 @@
 package com.mohamedhefny.marveltask.ui.home.adapters;
 
-import android.app.Activity;
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,9 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.mohamedhefny.marveltask.R;
 import com.mohamedhefny.marveltask.data.entities.Character;
-import com.mohamedhefny.marveltask.ui.details.DetailsActivity;
-import com.mohamedhefny.marveltask.ui.home.ClickClaback;
-import com.mohamedhefny.marveltask.util.AppConstants;
+import com.mohamedhefny.marveltask.ui.home.ClickCallback;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -29,10 +25,10 @@ public class HomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private static final int LOADING_TYPE = 2;
 
     private List<Character> mCharacterList;
-    private ClickClaback mCharacterCallback;
+    private ClickCallback mCharacterCallback;
 
 
-    public HomeAdapter(List<Character> characterList, ClickClaback characterCallback) {
+    public HomeAdapter(List<Character> characterList, ClickCallback characterCallback) {
         this.mCharacterList = characterList;
         mCharacterCallback = characterCallback;
     }
@@ -118,11 +114,11 @@ public class HomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         @Override
         public void onClick(View v) {
-            mCharacterCallback.onCharacterClicked(getAdapterPosition(), false);
+            mCharacterCallback.onCharacterSelected(mCharacterList.get(getAdapterPosition()));
         }
     }
 
-    class LoadingViewHolder extends RecyclerView.ViewHolder {
+    static class LoadingViewHolder extends RecyclerView.ViewHolder {
 
         LoadingViewHolder(@NonNull View itemView) {
             super(itemView);

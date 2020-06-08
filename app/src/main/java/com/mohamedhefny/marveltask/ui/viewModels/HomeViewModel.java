@@ -55,6 +55,10 @@ public class HomeViewModel extends AndroidViewModel {
         return mCharsRepository.getSearchList();
     }
 
+    public void setSelectedCharacter(Character character) {
+        mCharsRepository.setLastSelectedCharacter(character);
+    }
+
     public boolean isLoading() {
         return mCharsRepository.isLoading().getValue();
     }

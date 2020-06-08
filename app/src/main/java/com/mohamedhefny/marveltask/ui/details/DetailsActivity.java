@@ -1,13 +1,13 @@
 package com.mohamedhefny.marveltask.ui.details;
 
-import androidx.fragment.app.FragmentActivity;
-import androidx.lifecycle.ViewModelProviders;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.fragment.app.FragmentActivity;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.jgabrielfreitas.core.BlurImageView;
 import com.mohamedhefny.marveltask.R;
@@ -58,8 +58,7 @@ public class DetailsActivity extends BaseActivity {
 
         mDetailsViewModel = obtainViewModel(this);
 
-        mDetailsViewModel.init(AppDependencies.provideCharsRepo(this),
-                getCharacterPosition(), getSearchFlag());
+        mDetailsViewModel.initSelectedCharacter(AppDependencies.provideCharsRepo(this));
 
         mDetailsViewModel.loadDetails();
 
@@ -73,20 +72,6 @@ public class DetailsActivity extends BaseActivity {
 
     private DetailsViewModel obtainViewModel(FragmentActivity activity) {
         return ViewModelProviders.of(activity).get(DetailsViewModel.class);
-    }
-
-    /**
-     * Get intent extras and get character position
-     */
-    private int getCharacterPosition() {
-        return getIntent().getIntExtra(AppConstants.CHARACTER_POSITION, -1);
-    }
-
-    /**
-     * Get intent extras and get search flag to decide retrieve data from primary list or search list.
-     */
-    private boolean getSearchFlag() {
-        return getIntent().getBooleanExtra(AppConstants.SEARCH_FLAG, false);
     }
 
     /**
@@ -111,7 +96,8 @@ public class DetailsActivity extends BaseActivity {
         mCharacterDescription.setText(character.getDescription());
 
         Picasso.get()
-                .load(character.getThumbnail().getPath().concat("/standard_xlarge.").concat(character.getThumbnail().getExtension()))
+                .load(character.getThumbnail().getPath().concat("/standard_xlarge.")
+                        .concat(character.getThumbnail().getExtension()))
                 .into(mPosterImg, new Callback() {
                     @Override
                     public void onSuccess() {

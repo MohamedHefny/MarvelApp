@@ -7,10 +7,8 @@ public class AppConstants {
     public final static String API_PRIVATE_KEY = "9c9ef23db6b9a99f2ace2a96f711459372b07c42";
 
     public final static String CHARACTER_ID = "char_id";
-    public final static String CHARACTER_POSITION = "char_pos";
     public final static String DETAILS_ITEM_POSITION = "list_item_position";
     public final static String DETAILS_LIST_TYPE = "list_type";
-    public final static String SEARCH_FLAG = "search";
 
     public static class EndPoints {
 
